@@ -56,21 +56,24 @@ class Solution {
         return maxTreeDepth(root, 0);
     }
     public int maxTreeDepth(TreeNode root,int level){
-        int maximumLeft = 0;
-        int maximumRight = 0;
         if (root == null) {
             return level;
         }
-        if (root.left != null) {
-            maximumLeft =  maxTreeDepth(root.left, level+1);
+        if (root.left == null) {
+            if (root.right == null) {
+                return level+1;
+            }else{
+                return maxTreeDepth(root.right, level+1);
+            }
+        }else{
+            if (root.right == null) {
+                return maxTreeDepth(root.left, level+1);
+            }else{
+                int maximumLeft =  maxTreeDepth(root.left, level+1);
+                int maximumRight = maxTreeDepth(root.right, level+1);
+                return maximumLeft>maximumRight?maximumLeft:maximumRight;
+            }
         }
-        if (root.right != null) {
-            maximumRight = maxTreeDepth(root.right, level+1);
-        }
-        if (root.left == null && root.right == null) {
-            return level+1;
-        }
-        return maximumLeft>maximumRight?maximumLeft:maximumRight;
     }
 }
 // @lc code=end
