@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.naming.directory.InvalidAttributeIdentifierException;
 
@@ -85,36 +87,30 @@ class Solution {
     }
 
     private boolean isLevelSymmetric(List<TreeNode> nodeList){
-        List<TreeNode> localNodes = new ArrayList<>(2*nodeList.size());
-        if (nodeList.isEmpty()) {
+        int size = nodeList.size();
+        if (size == 0) {
             return true;
         }
-        if ((nodeList.size() % 2) != 0) {
+        if ((size % 2) != 0) {
             return false;
         }
-        for (int i = 0; i < nodeList.size(); i++) {
-            if (nodeList.get(i) == null && nodeList.get(nodeList.size()-1-i) == null) {
-                continue;
-            }else{
-                if (nodeList.get(i) == null || nodeList.get(nodeList.size()-1-i) == null) {
-                    return false;
-                }
-            }
-            if (i < nodeList.size()/2 && (nodeList.get(i).val != nodeList.get(nodeList.size()-1-i).val)) {
+        for (int i = 0; i < size ; i++) {
+            if (nodeList.get(i) == null && nodeList.get(size-1-i) != null) {
                 return false;
             }
-            if (nodeList.get(i).left != null){
-                localNodes.add(nodeList.get(i).left); 
-            }else{
-                localNodes.add(null);
+            if (nodeList.get(i) == null || nodeList.get(size-1-i) == null) {
+                continue;
             }
-            if (nodeList.get(i).right != null){
-                localNodes.add(nodeList.get(i).right);
-            }else{
-                localNodes.add(null);
+            if (nodeList.get(i) != null) {
+                nodeList.add(nodeList.get(i).left);
+                nodeList.add(nodeList.get(i).right);
+            }
+            if (i<size/2 && nodeList.get(i).val != nodeList.get(size-1-i).val) {
+                return false;
             }
         }
-        return isLevelSymmetric(localNodes);
+        nodeList.subList(0, size).clear();
+        return isLevelSymmetric(nodeList);
     }
 }
 // @lc code=end
