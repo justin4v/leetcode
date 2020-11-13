@@ -61,15 +61,13 @@ class Solution {
         if (root.left == null && root.right==null) {
             return sum == 0;
         }
-        boolean left = false;
-        boolean right = false;
-        if (root.left != null) {
-            left = hasPathSum(root.left, sum);
+        if (root.left != null && root.right == null) {
+            return hasPathSum(root.left, sum);
         }
-        if (root.right != null) {
-            right = hasPathSum(root.right, sum);
+        if (root.left == null && root.right != null) {
+            return hasPathSum(root.right, sum);
         }
-        return left || right;
+        return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
     }
     
 }
