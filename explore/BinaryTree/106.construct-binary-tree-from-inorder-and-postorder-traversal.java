@@ -1,5 +1,7 @@
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /*
@@ -57,29 +59,36 @@ import java.util.stream.Collectors;
  * }
  */
 class Solution {
+    Map<Integer,Integer> position = new HashMap<>();
     public TreeNode buildTree(int[] inorder, int[] postorder) {
         if (inorder.length == 0 && postorder.length ==0) {
             return null;
         }
-        List<Integer> in = Arrays.stream(inorder).boxed().collect(Collectors.toList());
-        List<Integer> post = Arrays.stream(postorder).boxed().collect(Collectors.toList());
-        return buildTree(in, post);
+        for (int i = 0; i < inorder.length; i++) {
+            position.put(inorder[i], i);
+        }
+       return buildTree(inorder,0,inorder.length-1, postorder,0,postorder.length-1);
     }
 
-    private TreeNode buildTree(List<Integer> inOrder,List<Integer> postOrder){
-        if (inOrder.isEmpty() && postOrder.isEmpty()) {
+    // 和用list实现相比 优点是 1.使用数组 随机存取为O(1) 效率最高 
+    // 2. 将值与索引保存在map 中，不需要遍历查找
+    // 3.直接将 index传入 不需要再次获取
+    private TreeNode buildTree(int[] inOrder,int inStart, int inEnd,int[] postOrder,int postStart,int postEnd){
+        if (inEnd < inStart && postEnd < postStart) {
             return null;
         }
         // find the root index in inorder
-        int rootIndexIn = inOrder.indexOf(postOrder.get(postOrder.size()-1));
+        int rootIndexOfIn = position.get(postOrder[postEnd]);
         // find the root
-        TreeNode node = new TreeNode(inOrder.get(rootIndexIn));
+        TreeNode node = new TreeNode(postOrder[postEnd]);
         // find the left and right tree
-        if (rootIndexIn >= 0) {
-            node.left = buildTree(inOrder.subList(0, rootIndexIn),postOrder.subList(0, rootIndexIn));
+        // All the index compine should be complete
+        // 相当于在 rootIndexOfIn 把数组分成两半
+        if (rootIndexOfIn >= 0) {
+            node.left = buildTree(inOrder,inStart,rootIndexOfIn-1,postOrder,postStart,postStart+(rootIndexOfIn-1-inStart));
         }
-        if (rootIndexIn >= 0 && rootIndexIn < inOrder.size()-1) {
-            node.right = buildTree(inOrder.subList(rootIndexIn+1,inOrder.size()),postOrder.subList(rootIndexIn,postOrder.size()-1));
+        if (rootIndexOfIn >= 0 && rootIndexOfIn <= inOrder.length-1) {
+            node.right = buildTree(inOrder,rootIndexOfIn+1,inEnd,postOrder,postStart+rootIndexOfIn-inStart,postEnd-1);
         }
         return node;
     }
