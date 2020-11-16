@@ -1,7 +1,5 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /*
@@ -67,7 +65,7 @@ class Solution {
         List<Integer> post = Arrays.stream(postorder).boxed().collect(Collectors.toList());
         return buildTree(in, post);
     }
-    
+
     private TreeNode buildTree(List<Integer> inOrder,List<Integer> postOrder){
         if (inOrder.isEmpty() && postOrder.isEmpty()) {
             return null;
