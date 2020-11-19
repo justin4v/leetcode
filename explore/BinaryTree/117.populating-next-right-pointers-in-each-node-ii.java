@@ -93,11 +93,11 @@ class Solution {
     // 下一个层级的开始节点
     Node nextLevelNode = new Node();
     public Node connect(Node root) {
-        connectByLevel(root, 1);
+        connectByLevel(root);
         return root;
     }
     // recursive by level
-    public void connectByLevel(Node node,int level){
+    public void connectByLevel(Node node){
         // 每次初始化为空
         nextLevelNode = null;
         nextSubTree = null;
@@ -141,7 +141,7 @@ class Solution {
             }
             node = node.next;
         }
-       connectByLevel(nextLevelNode, level+1);
+       connectByLevel(nextLevelNode);
     }
 }
 // @lc code=end
