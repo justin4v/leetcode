@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 /*
  * @lc app=leetcode id=236 lang=java
@@ -71,14 +73,63 @@ import java.util.ArrayList;
  *     TreeNode(int x) { val = x; }
  * }
  */
-class Solution {
-    // Iterator the tree by level 
-    // get the level number of each node
-    // compare two level number and get the result node
-    List<List<TreeNode>> levelTree = new ArrayList<>();
-    List<TreeNode> currentLevel = new ArrayList<>();
+public class Solution {
+    // Iterator the tree by in-order
+    // get the path of each node
+    // compare two path and get the result node
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        
+        Stack<TreeNode> path1 = new Stack<>();
+        Stack<TreeNode> path2 = new Stack<>();
+        if (root == null) {
+            return null;
+        }
+        path1.push(root);
+        path2.push(root);
+        getNodePath(root, p, path1);
+        getNodePath(root, q, path2);
+        return getLCA(path1, path2);
+    }   
+    // find the path of goal node
+    public boolean getNodePath(TreeNode currentNode,TreeNode goalNode, Stack<TreeNode> path){
+        if (currentNode == null) {
+            return false;
+        }
+        if (currentNode.val == goalNode.val) {
+            return true;
+        }
+        if (currentNode.left != null) {
+            path.push(currentNode.left);
+            if(getNodePath(currentNode.left, goalNode, path)){
+                return true;
+            }
+        }
+        if (currentNode.right != null) {
+            path.push(currentNode.right);
+            if(getNodePath(currentNode.right, goalNode, path)){
+                return true;
+            }
+        }
+        if (currentNode.left == null && currentNode.right == null) {
+            // 回退到上一层
+            path.pop();
+            return false;
+        }
+        // 回退到上一层
+        path.pop();
+        return false;
+    }
+
+    // 从前向后 最后一个相同的节点 就是最小共同祖先
+    private TreeNode getLCA(List<TreeNode> path1,List<TreeNode> path2){
+        TreeNode result = null;
+        Integer size = path1.size() < path2.size() ? path1.size():path2.size();
+        for (int i = 0; i < size; i++) {
+            if (path1.get(i).val != path2.get(i).val) {
+                break;
+            }
+            result = path1.get(i);
+        }
+        return result;
     }
 }
 // @lc code=end
