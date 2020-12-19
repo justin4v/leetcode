@@ -118,7 +118,8 @@ class MyCircularQueue {
         if (isEmpty()) {
             return -1;
         }
-        return circleQueue[front+1];
+        // front 位置没有元素
+        return circleQueue[(front+1)%size];
     }
     
     public int Rear() {
